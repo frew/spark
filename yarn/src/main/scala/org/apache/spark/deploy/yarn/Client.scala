@@ -283,8 +283,9 @@ private[spark] class Client(
             val localPath = new Path(localURI)
             val linkname = Option(localURI.getFragment()).getOrElse(localPath.getName())
             val destPath = copyFileToRemote(dst, localPath, replication)
+            val destFs = FileSystem.get(destPath.toUri(), hadoopConf)
             distCacheMgr.addResource(
-              fs, hadoopConf, destPath, localResources, resType, linkname, statCache)
+              destFs, hadoopConf, destPath, localResources, resType, linkname, statCache)
             if (addToClasspath) {
               cachedSecondaryJarLinks += linkname
             }
